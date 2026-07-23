@@ -1,0 +1,198 @@
+export const products = [
+  {
+    id: "f1",
+    img: "/img/products/f1.jpg",
+    gallery: ["/img/products/f1.jpg", "/img/products/f2.jpg", "/img/products/f3.jpg", "/img/products/f4.jpg"],
+    brand: "Nexa",
+    name: "Camiseta Astronauta Cartoon",
+    category: "Camisetas",
+    price: 78,
+    rating: 5,
+    description:
+      "Camiseta 100% algodão com estampa exclusiva de astronauta em estilo cartoon. Corte reto, confortável para o dia a dia.",
+  },
+  {
+    id: "f2",
+    img: "/img/products/f2.jpg",
+    gallery: ["/img/products/f2.jpg", "/img/products/f1.jpg", "/img/products/f3.jpg", "/img/products/f5.jpg"],
+    brand: "Urbanix",
+    name: "Jaqueta Corta-Vento Urbana",
+    category: "Jaquetas",
+    price: 156,
+    rating: 4,
+    description:
+      "Jaqueta leve, resistente ao vento e à chuva fraca, ideal para o dia a dia na cidade. Bolsos com zíper e capuz removível.",
+  },
+  {
+    id: "f3",
+    img: "/img/products/f3.jpg",
+    gallery: ["/img/products/f3.jpg", "/img/products/f4.jpg", "/img/products/f2.jpg", "/img/products/f6.jpg"],
+    brand: "Nexa",
+    name: "Moletom com Capuz Essential",
+    category: "Moletons",
+    price: 132,
+    rating: 5,
+    description:
+      "Moletom canguru em fleece macio, forro felpudo por dentro. Ótimo para dias mais frios sem perder o estilo.",
+  },
+  {
+    id: "f4",
+    img: "/img/products/f4.jpg",
+    gallery: ["/img/products/f4.jpg", "/img/products/f5.jpg", "/img/products/f1.jpg", "/img/products/f7.jpg"],
+    brand: "Trek",
+    name: "Calça Cargo Multibolsos",
+    category: "Calças",
+    price: 149,
+    rating: 4,
+    description:
+      "Calça cargo resistente com múltiplos bolsos funcionais, tecido durável e ajuste confortável para uso diário.",
+  },
+  {
+    id: "f5",
+    img: "/img/products/f5.jpg",
+    gallery: ["/img/products/f5.jpg", "/img/products/f6.jpg", "/img/products/f3.jpg", "/img/products/f8.jpg"],
+    brand: "Urbanix",
+    name: "Camisa Social Slim Fit",
+    category: "Camisas",
+    price: 118,
+    rating: 4,
+    description:
+      "Camisa social de corte slim, tecido leve e antiamassante. Combina com looks formais e casuais.",
+  },
+  {
+    id: "f6",
+    img: "/img/products/f6.jpg",
+    gallery: ["/img/products/f6.jpg", "/img/products/f7.jpg", "/img/products/f5.jpg", "/img/products/f2.jpg"],
+    brand: "Trek",
+    name: "Bermuda Tactel Esportiva",
+    category: "Bermudas",
+    price: 69,
+    rating: 3,
+    description:
+      "Bermuda leve em tactel, secagem rápida e cós elástico com cordão de ajuste. Perfeita para treinos e lazer.",
+  },
+  {
+    id: "f7",
+    img: "/img/products/f7.jpg",
+    gallery: ["/img/products/f7.jpg", "/img/products/f8.jpg", "/img/products/f4.jpg", "/img/products/f1.jpg"],
+    brand: "Nexa",
+    name: "Polo Piquet Clássica",
+    category: "Camisetas",
+    price: 89,
+    rating: 5,
+    description:
+      "Polo em tecido piquet 100% algodão, gola e punhos canelados. Um clássico que nunca sai de moda.",
+  },
+  {
+    id: "f8",
+    img: "/img/products/f8.jpg",
+    gallery: ["/img/products/f8.jpg", "/img/products/f1.jpg", "/img/products/f6.jpg", "/img/products/f3.jpg"],
+    brand: "Urbanix",
+    name: "Jaqueta Jeans Oversized",
+    category: "Jaquetas",
+    price: 172,
+    rating: 4,
+    description:
+      "Jaqueta jeans com modelagem oversized, lavagem média e botões metálicos. Peça-chave para compor looks despojados.",
+  },
+  {
+    id: "n1",
+    img: "/img/products/n1.jpg",
+    gallery: ["/img/products/n1.jpg", "/img/products/n2.jpg", "/img/products/n3.jpg", "/img/products/n4.jpg"],
+    brand: "Trek",
+    name: "Tênis Runner Performance",
+    category: "Calçados",
+    price: 249,
+    rating: 5,
+    description:
+      "Tênis leve com amortecimento em EVA e cabedal respirável, desenvolvido para corridas e uso urbano.",
+  },
+  {
+    id: "n2",
+    img: "/img/products/n2.jpg",
+    gallery: ["/img/products/n2.jpg", "/img/products/n3.jpg", "/img/products/n1.jpg", "/img/products/n5.jpg"],
+    brand: "Nexa",
+    name: "Vestido Midi Verão",
+    category: "Vestidos",
+    price: 134,
+    rating: 5,
+    description:
+      "Vestido midi em viscose fluida, estampa floral exclusiva da coleção de verão. Caimento leve e confortável.",
+  },
+  {
+    id: "n3",
+    img: "/img/products/n3.jpg",
+    gallery: ["/img/products/n3.jpg", "/img/products/n4.jpg", "/img/products/n2.jpg", "/img/products/n6.jpg"],
+    brand: "Urbanix",
+    name: "Blusa Cropped Canelada",
+    category: "Camisetas",
+    price: 64,
+    rating: 4,
+    description:
+      "Blusa cropped em malha canelada, tecido com leve elasticidade e caimento justo ao corpo.",
+  },
+  {
+    id: "n4",
+    img: "/img/products/n4.jpg",
+    gallery: ["/img/products/n4.jpg", "/img/products/n5.jpg", "/img/products/n3.jpg", "/img/products/n7.jpg"],
+    brand: "Trek",
+    name: "Boné Trucker Bordado",
+    category: "Acessórios",
+    price: 45,
+    rating: 4,
+    description:
+      "Boné estilo trucker com aba curva e tela respirável na parte de trás, ajuste em fivela regulável.",
+  },
+  {
+    id: "n5",
+    img: "/img/products/n5.jpg",
+    gallery: ["/img/products/n5.jpg", "/img/products/n6.jpg", "/img/products/n4.jpg", "/img/products/n8.jpg"],
+    brand: "Nexa",
+    name: "Saia Jeans A-Line",
+    category: "Calças",
+    price: 98,
+    rating: 3,
+    description:
+      "Saia jeans com modelagem A-line, cintura alta e barra desfiada. Combina com praticamente tudo no guarda-roupa.",
+  },
+  {
+    id: "n6",
+    img: "/img/products/n6.jpg",
+    gallery: ["/img/products/n6.jpg", "/img/products/n7.jpg", "/img/products/n5.jpg", "/img/products/n1.jpg"],
+    brand: "Urbanix",
+    name: "Mochila Executiva Impermeável",
+    category: "Acessórios",
+    price: 189,
+    rating: 5,
+    description:
+      "Mochila com tecido impermeável, compartimento acolchoado para notebook até 15,6' e porta USB externa.",
+  },
+  {
+    id: "n7",
+    img: "/img/products/n7.jpg",
+    gallery: ["/img/products/n7.jpg", "/img/products/n8.jpg", "/img/products/n6.jpg", "/img/products/n2.jpg"],
+    brand: "Trek",
+    name: "Short Moletom Confort",
+    category: "Bermudas",
+    price: 59,
+    rating: 4,
+    description:
+      "Short em moletom flanelado, cós elástico e bolsos laterais. Conforto máximo para descanso ou uso casual.",
+  },
+  {
+    id: "n8",
+    img: "/img/products/n8.jpg",
+    gallery: ["/img/products/n8.jpg", "/img/products/n1.jpg", "/img/products/n7.jpg", "/img/products/n3.jpg"],
+    brand: "Nexa",
+    name: "Óculos de Sol Retangular",
+    category: "Acessórios",
+    price: 112,
+    rating: 4,
+    description:
+      "Óculos de sol com armação em acetato e lentes com proteção UV400. Design retangular atemporal.",
+  },
+];
+
+export function getProductById(id) {
+  return products.find((p) => p.id === id);
+}
