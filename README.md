@@ -1,10 +1,58 @@
-# NovaLoja — E-commerce Responsivo (React)
+# NovaLoja — E-commerce Responsivo
 
 Recriação em React + Vite + React Router do projeto original `Ecommecer-Responsivo`
-(HTML/CSS/JS puro). Todas as páginas foram portadas e o carrinho agora é
-**funcional de verdade** (o original só tinha links `href="#"` decorativos).
+(HTML/CSS/JS puro), que evoluiu de uma landing page estática para uma aplicação
+full-stack: front-end React consumindo uma API própria em Node/Express + Prisma
+(PostgreSQL) + Redis, com autenticação, carrinho, pedidos, pagamento via Mercado
+Pago e um painel administrativo.
+
+## Estado atual (2026-07-24)
+
+- **Front-end** (`src/`): React 18 + Vite + react-router-dom. Login/registro,
+  carrinho, checkout, histórico de pedidos, área de conta e painel admin
+  (produtos/pedidos). Deploy estático no GitHub Pages já configurado e
+  funcionando: https://studiocastro.github.io/Ecommerce/
+- **Backend** (`server/`): Express + Prisma + Postgres + Redis + Mercado Pago,
+  rodando localmente via Docker Compose (`docker compose up -d`). Ainda **não
+  está hospedado publicamente** — só existe na máquina de desenvolvimento.
+- **Segurança**: já passou por uma rodada completa de hardening (JWT com
+  segredos fortes e rotação de refresh token, rate limit em login/registro,
+  verificação de assinatura do webhook do Mercado Pago, Docker rodando como
+  usuário não-root, headers de segurança, cookies `httpOnly`/`Strict`,
+  dependências com CVEs corrigidas). Ver histórico do git (commit
+  "Adiciona backend completo, autenticação e endurece a segurança da
+  aplicação") para o detalhe de cada item.
+
+### Pendência em aberto: onde hospedar o backend
+
+O site no GitHub Pages hoje só mostra a interface — login, produtos, carrinho
+e pedidos não funcionam para quem não é você, porque o front aponta pro
+backend em `localhost:3333`, que só existe na sua máquina. Para o site ficar
+funcional para qualquer visitante, falta hospedar `server/` (+ Postgres +
+Redis) em algum lugar público e apontar `VITE_API_URL` (no build do GitHub
+Actions, via Settings > Secrets and variables > Actions > Variables) para essa
+URL.
+
+Opções discutidas:
+
+- **Railway / Render** (recomendado para começar): conectam direto no repo,
+  sobem o backend + Postgres + Redis a partir do `Dockerfile`/
+  `docker-compose.yml` que já existe, com HTTPS automático — sem precisar
+  mexer em servidor. Teto de uso gratuito menor, mas é rodando em minutos.
+- **Hostinger VPS** (ou qualquer outro VPS): mais controle e pode sair mais
+  barato a longo prazo, mas exige instalar Docker, configurar Nginx/SSL e
+  manter o servidor manualmente. **Hospedagem compartilhada comum da
+  Hostinger não serve** — precisa ser plano com VPS, já que a aplicação
+  precisa rodar processos Node/Postgres/Redis persistentes, não só servir
+  arquivos estáticos.
+
+Decisão em 2026-07-24: adiar o deploy do backend por enquanto ("hoje está bom
+por enquanto"). Próxima sessão: retomar por aqui — decidir Railway/Render vs
+VPS e configurar o deploy.
 
 ## Como rodar
+
+**Front-end (interface, sem dados reais funcionando sozinho):**
 
 ```bash
 npm install
@@ -13,33 +61,37 @@ npm run dev
 
 Acesse `http://localhost:5173`.
 
+**Stack completa (front + backend + banco), pra tudo funcionar de verdade:**
+
+```bash
+docker compose up -d          # sobe Postgres, Redis e o backend (porta 3333)
+npm install && npm run dev    # front-end (porta 5173), noutro terminal
+```
+
+O backend precisa de um `server/.env` preenchido (copie de `server/.env.example`
+e ajuste os segredos — nunca reutilize os valores de exemplo, veja o aviso de
+segurança no histórico do git).
+
 ## Estrutura
 
 ```
 ecommerce-responsivo/
+├── .github/workflows/deploy-pages.yml  # build + deploy do front no GitHub Pages
+├── docker-compose.yml                  # Postgres + Redis + backend, pra rodar tudo local
 ├── public/img/          # imagens do projeto original (limpas, sem os arquivos quebrados)
-└── src/
-    ├── main.jsx          # entry point + Router + CartProvider
-    ├── App.jsx            # define as rotas
-    ├── index.css          # CSS global (adaptado do style.css original)
-    ├── context/
-    │   └── CartContext.jsx   # estado global do carrinho, persistido no localStorage
-    ├── data/
-    │   ├── products.js       # catálogo (16 produtos, cada um com nome/preço/categoria reais)
-    │   └── blogPosts.js      # posts do blog
-    ├── components/
-    │   ├── Header.jsx        # navegação + menu mobile + contador do carrinho
-    │   ├── Footer.jsx
-    │   ├── Newsletter.jsx    # formulário com validação
-    │   └── ProductCard.jsx   # card de produto reutilizável
-    └── pages/
-        ├── Home.jsx
-        ├── Shop.jsx           # com filtro por categoria e paginação real
-        ├── ProductDetail.jsx  # rota dinâmica /product/:id, galeria de imagens
-        ├── Cart.jsx           # carrinho de verdade: remover, alterar qtd, cupom
-        ├── About.jsx
-        ├── Contact.jsx        # formulário com validação e mensagem de sucesso
-        └── Blog.jsx           # com paginação
+├── src/                  # front-end (React + Vite + react-router-dom)
+│   ├── main.jsx          # entry point + Router + AuthProvider + CartProvider
+│   ├── App.jsx            # define as rotas (inclui /login, /admin, ProtectedRoute)
+│   ├── context/           # AuthContext (sessão) e CartContext (carrinho, localStorage)
+│   ├── services/api.js    # cliente HTTP da API (access token em memória, refresh via cookie)
+│   ├── components/        # Header, Footer, Newsletter, ProductCard, ProtectedRoute
+│   └── pages/             # Home, Shop, ProductDetail, Cart, Login, Register, Account/, Admin/...
+└── server/                # backend (Node/Express + Prisma + Postgres + Redis + Mercado Pago)
+    ├── prisma/schema.prisma   # modelo de dados (usuários, produtos, pedidos, pagamentos...)
+    └── src/
+        ├── app.js             # helmet, CORS, rate limit, Permissions-Policy
+        ├── routes/ controllers/ services/ repositories/  # camadas da API REST (/api/v1/...)
+        └── middlewares/       # auth (JWT), validate (Zod), errorHandler
 ```
 
 ## O que foi corrigido em relação ao site original
