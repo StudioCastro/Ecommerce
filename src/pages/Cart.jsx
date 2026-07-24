@@ -1,15 +1,53 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaTimesCircle } from "react-icons/fa";
 import { useCart } from "../context/CartContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
+import { api } from "../services/api.js";
+import Newsletter from "../components/Newsletter.jsx";
 
 const VALID_COUPON = "DESCONTO10";
 
+const emptyAddressForm = {
+  label: "",
+  street: "",
+  number: "",
+  complement: "",
+  district: "",
+  city: "",
+  state: "",
+  zipCode: "",
+};
+
 export default function Cart() {
-  const { items, removeFromCart, updateQty, subtotal } = useCart();
+  const { items, removeFromCart, updateQty, subtotal, clearCart } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   const [coupon, setCoupon] = useState("");
   const [couponMsg, setCouponMsg] = useState("");
   const [discount, setDiscount] = useState(0);
+
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState("");
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [addressForm, setAddressForm] = useState(emptyAddressForm);
+
+  const [checkingOut, setCheckingOut] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
+
+  useEffect(() => {
+    if (!user) return;
+    api
+      .getAddresses()
+      .then((list) => {
+        setAddresses(list);
+        const preferred = list.find((a) => a.isDefault) ?? list[0];
+        if (preferred) setSelectedAddressId(preferred.id);
+        setShowAddressForm(list.length === 0);
+      })
+      .catch(() => {});
+  }, [user]);
 
   function handleApplyCoupon(e) {
     e.preventDefault();
@@ -23,6 +61,60 @@ export default function Cart() {
   }
 
   const total = subtotal - discount;
+
+  function handleAddressChange(e) {
+    setAddressForm({ ...addressForm, [e.target.name]: e.target.value });
+  }
+
+  async function handleSaveAddress(e) {
+    e.preventDefault();
+    setCheckoutError("");
+    try {
+      const created = await api.createAddress({
+        ...addressForm,
+        state: addressForm.state.toUpperCase(),
+        isDefault: addresses.length === 0,
+      });
+      setAddresses((prev) => [created, ...prev]);
+      setSelectedAddressId(created.id);
+      setShowAddressForm(false);
+      setAddressForm(emptyAddressForm);
+    } catch (err) {
+      setCheckoutError(err.message);
+    }
+  }
+
+  async function handleCheckout() {
+    if (!user) {
+      navigate("/login", { state: { from: "/cart" } });
+      return;
+    }
+    if (!selectedAddressId) {
+      setCheckoutError("Cadastre um endereço de entrega antes de finalizar.");
+      setShowAddressForm(true);
+      return;
+    }
+
+    setCheckingOut(true);
+    setCheckoutError("");
+    try {
+      const { order, checkoutUrl } = await api.createOrder({
+        items: items.map((i) => ({ productId: i.id, qty: i.qty })),
+        addressId: selectedAddressId,
+        couponCode: discount > 0 ? coupon.trim().toUpperCase() : undefined,
+      });
+      clearCart();
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      } else {
+        navigate(`/order/${order.id}`);
+      }
+    } catch (err) {
+      setCheckoutError(err.message);
+    } finally {
+      setCheckingOut(false);
+    }
+  }
 
   return (
     <>
@@ -131,12 +223,70 @@ export default function Cart() {
                 </tr>
               </tbody>
             </table>
-            <button className="normal" onClick={() => alert("Checkout simulado — compra finalizada!")}>
-              Fazer o Check-out
+
+            {user && addresses.length > 0 && !showAddressForm && (
+              <div style={{ margin: "15px 0" }}>
+                <label htmlFor="address-select">Entregar em:</label>
+                <select
+                  id="address-select"
+                  value={selectedAddressId}
+                  onChange={(e) => setSelectedAddressId(e.target.value)}
+                  style={{ display: "block", width: "100%", margin: "8px 0", padding: "8px" }}
+                >
+                  {addresses.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      {a.label ? `${a.label} — ` : ""}
+                      {a.street}, {a.number} — {a.city}/{a.state}
+                    </option>
+                  ))}
+                </select>
+                <button type="button" className="normal" onClick={() => setShowAddressForm(true)}>
+                  Novo endereço
+                </button>
+              </div>
+            )}
+
+            {user && showAddressForm && (
+              <form
+                onSubmit={handleSaveAddress}
+                style={{ display: "flex", flexDirection: "column", gap: "8px", margin: "15px 0" }}
+              >
+                <input name="label" placeholder="Rótulo (ex: Casa)" value={addressForm.label} onChange={handleAddressChange} />
+                <input name="street" placeholder="Rua" value={addressForm.street} onChange={handleAddressChange} required />
+                <input name="number" placeholder="Número" value={addressForm.number} onChange={handleAddressChange} required />
+                <input
+                  name="complement"
+                  placeholder="Complemento"
+                  value={addressForm.complement}
+                  onChange={handleAddressChange}
+                />
+                <input name="district" placeholder="Bairro" value={addressForm.district} onChange={handleAddressChange} required />
+                <input name="city" placeholder="Cidade" value={addressForm.city} onChange={handleAddressChange} required />
+                <input
+                  name="state"
+                  placeholder="UF"
+                  maxLength={2}
+                  value={addressForm.state}
+                  onChange={handleAddressChange}
+                  required
+                />
+                <input name="zipCode" placeholder="CEP" value={addressForm.zipCode} onChange={handleAddressChange} required />
+                <button className="normal" type="submit">
+                  Salvar endereço
+                </button>
+              </form>
+            )}
+
+            {checkoutError && <p className="coupon-msg">{checkoutError}</p>}
+
+            <button className="normal" onClick={handleCheckout} disabled={checkingOut}>
+              {checkingOut ? "Processando..." : user ? "Fazer o Check-out" : "Entrar para finalizar a compra"}
             </button>
           </div>
         </section>
       )}
+
+      <Newsletter />
     </>
   );
 }

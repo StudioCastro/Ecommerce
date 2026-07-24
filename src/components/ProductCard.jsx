@@ -12,7 +12,7 @@ export default function ProductCard({ product }) {
   }
 
   return (
-    <Link to={`/product/${product.id}`} className="pro">
+    <Link to={`/product/${product.slug}`} className="pro">
       <img className="pro-img" src={product.img} alt={product.name} />
       <div className="des">
         <span>{product.brand}</span>

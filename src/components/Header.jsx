@@ -1,11 +1,20 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { FaBars, FaTimes, FaShoppingBag } from "react-icons/fa";
+import { NavLink, useNavigate } from "react-router-dom";
+import { FaBars, FaTimes, FaShoppingBag, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { useCart } from "../context/CartContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { totalItems } = useCart();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    logout();
+    setMenuOpen(false);
+    navigate("/");
+  }
 
   const linkClass = ({ isActive }) => (isActive ? "active" : "");
 
@@ -42,6 +51,33 @@ export default function Header() {
               Contact
             </NavLink>
           </li>
+          {user ? (
+            <>
+              {(user.role === "ADMIN" || user.role === "MANAGER") && (
+                <li>
+                  <NavLink to="/admin" className={linkClass} onClick={() => setMenuOpen(false)}>
+                    Admin
+                  </NavLink>
+                </li>
+              )}
+              <li>
+                <NavLink to="/account/orders" className={linkClass} onClick={() => setMenuOpen(false)} title={`Meus pedidos (${user.name})`}>
+                  <FaUser />
+                </NavLink>
+              </li>
+              <li>
+                <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }} title="Sair">
+                  <FaSignOutAlt />
+                </a>
+              </li>
+            </>
+          ) : (
+            <li>
+              <NavLink to="/login" className={linkClass} onClick={() => setMenuOpen(false)} title="Entrar">
+                <FaUser />
+              </NavLink>
+            </li>
+          )}
           <li id="lg-bag">
             <NavLink to="/cart" className={linkClass} onClick={() => setMenuOpen(false)}>
               <FaShoppingBag id="bolsa" />

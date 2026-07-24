@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard.jsx";
 import Newsletter from "../components/Newsletter.jsx";
-import { products } from "../data/products.js";
+import { useProducts } from "../hooks/useProducts.js";
 
 const features = [
   { img: "/img/features/f1.png", label: "Frete Grátis" },
@@ -13,6 +13,7 @@ const features = [
 ];
 
 export default function Home() {
+  const { products, loading, error } = useProducts();
   const featured = products.slice(0, 8);
   const newCollection = products.slice(8, 16);
 
@@ -40,6 +41,8 @@ export default function Home() {
       <section id="product1" className="section-p1">
         <h2>Produtos em Destaque</h2>
         <p>Coleção de Verão Novo Design Moderno</p>
+        {loading && <p>Carregando produtos...</p>}
+        {error && <p>Não foi possível carregar os produtos. Tente novamente mais tarde.</p>}
         <div className="pro-container">
           {featured.map((p) => (
             <ProductCard key={p.id} product={p} />

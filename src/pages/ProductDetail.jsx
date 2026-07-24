@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard.jsx";
 import Newsletter from "../components/Newsletter.jsx";
-import { getProductById, products } from "../data/products.js";
+import { useProduct, useProducts } from "../hooks/useProducts.js";
 import { useCart } from "../context/CartContext.jsx";
 
 const sizes = ["P", "M", "G", "GG"];
 
 export default function ProductDetail() {
-  const { id } = useParams();
-  const product = getProductById(id);
+  const { slug } = useParams();
+  const { product, loading, error } = useProduct(slug);
+  const { products: allProducts } = useProducts();
   const { addToCart } = useCart();
 
   const [mainImg, setMainImg] = useState(product?.img);
@@ -17,7 +18,19 @@ export default function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
-  if (!product) {
+  useEffect(() => {
+    setMainImg(product?.img);
+  }, [product]);
+
+  if (loading) {
+    return (
+      <section className="section-p1" style={{ textAlign: "center" }}>
+        <p>Carregando produto...</p>
+      </section>
+    );
+  }
+
+  if (error || !product) {
     return (
       <section className="section-p1" style={{ textAlign: "center" }}>
         <h2>Produto não encontrado</h2>
@@ -29,7 +42,9 @@ export default function ProductDetail() {
     );
   }
 
-  const related = products.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 4);
+  const related = allProducts
+    .filter((p) => p.id !== product.id && p.category === product.category)
+    .slice(0, 4);
 
   function handleAddToCart() {
     if (!size) {

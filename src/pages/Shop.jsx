@@ -1,22 +1,23 @@
 import { useMemo, useState } from "react";
 import ProductCard from "../components/ProductCard.jsx";
 import Newsletter from "../components/Newsletter.jsx";
-import { products } from "../data/products.js";
+import { useProducts } from "../hooks/useProducts.js";
 
 const PER_PAGE = 8;
 
 export default function Shop() {
+  const { products, loading, error } = useProducts();
   const [category, setCategory] = useState("Todos");
   const [page, setPage] = useState(1);
 
   const categories = useMemo(
     () => ["Todos", ...new Set(products.map((p) => p.category))],
-    []
+    [products]
   );
 
   const filtered = useMemo(
     () => (category === "Todos" ? products : products.filter((p) => p.category === category)),
-    [category]
+    [category, products]
   );
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
@@ -54,6 +55,8 @@ export default function Shop() {
       </section>
 
       <section id="product1" className="section-p1">
+        {loading && <p>Carregando produtos...</p>}
+        {error && <p>Não foi possível carregar os produtos. Tente novamente mais tarde.</p>}
         <div className="pro-container">
           {pageItems.map((p) => (
             <ProductCard key={p.id} product={p} />

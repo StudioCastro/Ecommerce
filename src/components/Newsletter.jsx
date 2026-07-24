@@ -1,17 +1,27 @@
 import { useState } from "react";
+import { api } from "../services/api.js";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!email.trim() || !email.includes("@")) {
       setMessage("Digite um e-mail válido.");
       return;
     }
-    setMessage("Inscrição confirmada! Fique de olho na sua caixa de entrada.");
-    setEmail("");
+    setSending(true);
+    try {
+      await api.subscribeNewsletter(email.trim());
+      setMessage("Inscrição confirmada! Fique de olho na sua caixa de entrada.");
+      setEmail("");
+    } catch (err) {
+      setMessage(err.message);
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -28,8 +38,8 @@ export default function Newsletter() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <button className="normal" type="submit">
-            Inscreva-se
+          <button className="normal" type="submit" disabled={sending}>
+            {sending ? "Enviando..." : "Inscreva-se"}
           </button>
         </form>
         {message && <p className="newsletter-msg">{message}</p>}

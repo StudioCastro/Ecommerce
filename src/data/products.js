@@ -1,3 +1,5 @@
+// Não é mais consumido pelas páginas (que agora buscam da API via src/hooks/useProducts.js).
+// Mantido como referência: é a fonte que server/prisma/seedData.js espelha para popular o banco.
 export const products = [
   {
     id: "f1",

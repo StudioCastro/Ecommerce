@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Newsletter from "../components/Newsletter.jsx";
+import { api } from "../services/api.js";
 
 const people = [
   {
@@ -22,17 +23,28 @@ const people = [
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
-    setSent(true);
-    setForm({ name: "", email: "", subject: "", message: "" });
-    setTimeout(() => setSent(false), 4000);
+    setError("");
+    setSending(true);
+    try {
+      await api.sendContact(form);
+      setSent(true);
+      setForm({ name: "", email: "", subject: "", message: "" });
+      setTimeout(() => setSent(false), 4000);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -86,6 +98,7 @@ export default function Contact() {
           <span>DEIXE UMA MENSAGEM</span>
           <h2>Adoramos ouvir você</h2>
           {sent && <p className="success-msg">Mensagem enviada com sucesso! Responderemos em breve.</p>}
+          {error && <p className="coupon-msg">{error}</p>}
           <input type="text" name="name" placeholder="Seu Nome" value={form.name} onChange={handleChange} required />
           <input type="email" name="email" placeholder="E-mail" value={form.email} onChange={handleChange} required />
           <input type="text" name="subject" placeholder="Assunto" value={form.subject} onChange={handleChange} />
@@ -98,8 +111,8 @@ export default function Contact() {
             onChange={handleChange}
             required
           ></textarea>
-          <button className="normal" type="submit">
-            Enviar
+          <button className="normal" type="submit" disabled={sending}>
+            {sending ? "Enviando..." : "Enviar"}
           </button>
         </form>
 
