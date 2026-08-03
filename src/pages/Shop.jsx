@@ -6,7 +6,7 @@ import { useProducts } from "../hooks/useProducts.js";
 const PER_PAGE = 8;
 
 export default function Shop() {
-  const { products, loading, error } = useProducts();
+  const { products, loading } = useProducts();
   const [category, setCategory] = useState("Todos");
   const [page, setPage] = useState(1);
 
@@ -56,7 +56,6 @@ export default function Shop() {
 
       <section id="product1" className="section-p1">
         {loading && <p>Carregando produtos...</p>}
-        {error && <p>Não foi possível carregar os produtos. Tente novamente mais tarde.</p>}
         <div className="pro-container">
           {pageItems.map((p) => (
             <ProductCard key={p.id} product={p} />

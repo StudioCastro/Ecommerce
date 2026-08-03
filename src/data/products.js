@@ -1,8 +1,10 @@
-// Não é mais consumido pelas páginas (que agora buscam da API via src/hooks/useProducts.js).
-// Mantido como referência: é a fonte que server/prisma/seedData.js espelha para popular o banco.
+// Fonte que server/prisma/seedData.js espelha para popular o banco, e também o fallback
+// usado por src/hooks/useProducts.js quando a API (backend local) não está acessível —
+// é o que faz o catálogo aparecer no GitHub Pages, onde não há backend hospedado.
 export const products = [
   {
     id: "f1",
+    slug: "camiseta-astronauta-cartoon",
     img: "/img/products/f1.jpg",
     gallery: ["/img/products/f1.jpg", "/img/products/f2.jpg", "/img/products/f3.jpg", "/img/products/f4.jpg"],
     brand: "Nexa",
@@ -15,6 +17,7 @@ export const products = [
   },
   {
     id: "f2",
+    slug: "jaqueta-corta-vento-urbana",
     img: "/img/products/f2.jpg",
     gallery: ["/img/products/f2.jpg", "/img/products/f1.jpg", "/img/products/f3.jpg", "/img/products/f5.jpg"],
     brand: "Urbanix",
@@ -27,6 +30,7 @@ export const products = [
   },
   {
     id: "f3",
+    slug: "moletom-com-capuz-essential",
     img: "/img/products/f3.jpg",
     gallery: ["/img/products/f3.jpg", "/img/products/f4.jpg", "/img/products/f2.jpg", "/img/products/f6.jpg"],
     brand: "Nexa",
@@ -39,6 +43,7 @@ export const products = [
   },
   {
     id: "f4",
+    slug: "calca-cargo-multibolsos",
     img: "/img/products/f4.jpg",
     gallery: ["/img/products/f4.jpg", "/img/products/f5.jpg", "/img/products/f1.jpg", "/img/products/f7.jpg"],
     brand: "Trek",
@@ -51,6 +56,7 @@ export const products = [
   },
   {
     id: "f5",
+    slug: "camisa-social-slim-fit",
     img: "/img/products/f5.jpg",
     gallery: ["/img/products/f5.jpg", "/img/products/f6.jpg", "/img/products/f3.jpg", "/img/products/f8.jpg"],
     brand: "Urbanix",
@@ -63,6 +69,7 @@ export const products = [
   },
   {
     id: "f6",
+    slug: "bermuda-tactel-esportiva",
     img: "/img/products/f6.jpg",
     gallery: ["/img/products/f6.jpg", "/img/products/f7.jpg", "/img/products/f5.jpg", "/img/products/f2.jpg"],
     brand: "Trek",
@@ -75,6 +82,7 @@ export const products = [
   },
   {
     id: "f7",
+    slug: "polo-piquet-classica",
     img: "/img/products/f7.jpg",
     gallery: ["/img/products/f7.jpg", "/img/products/f8.jpg", "/img/products/f4.jpg", "/img/products/f1.jpg"],
     brand: "Nexa",
@@ -87,6 +95,7 @@ export const products = [
   },
   {
     id: "f8",
+    slug: "jaqueta-jeans-oversized",
     img: "/img/products/f8.jpg",
     gallery: ["/img/products/f8.jpg", "/img/products/f1.jpg", "/img/products/f6.jpg", "/img/products/f3.jpg"],
     brand: "Urbanix",
@@ -99,6 +108,7 @@ export const products = [
   },
   {
     id: "n1",
+    slug: "tenis-runner-performance",
     img: "/img/products/n1.jpg",
     gallery: ["/img/products/n1.jpg", "/img/products/n2.jpg", "/img/products/n3.jpg", "/img/products/n4.jpg"],
     brand: "Trek",
@@ -111,6 +121,7 @@ export const products = [
   },
   {
     id: "n2",
+    slug: "vestido-midi-verao",
     img: "/img/products/n2.jpg",
     gallery: ["/img/products/n2.jpg", "/img/products/n3.jpg", "/img/products/n1.jpg", "/img/products/n5.jpg"],
     brand: "Nexa",
@@ -123,6 +134,7 @@ export const products = [
   },
   {
     id: "n3",
+    slug: "blusa-cropped-canelada",
     img: "/img/products/n3.jpg",
     gallery: ["/img/products/n3.jpg", "/img/products/n4.jpg", "/img/products/n2.jpg", "/img/products/n6.jpg"],
     brand: "Urbanix",
@@ -135,6 +147,7 @@ export const products = [
   },
   {
     id: "n4",
+    slug: "bone-trucker-bordado",
     img: "/img/products/n4.jpg",
     gallery: ["/img/products/n4.jpg", "/img/products/n5.jpg", "/img/products/n3.jpg", "/img/products/n7.jpg"],
     brand: "Trek",
@@ -147,6 +160,7 @@ export const products = [
   },
   {
     id: "n5",
+    slug: "saia-jeans-a-line",
     img: "/img/products/n5.jpg",
     gallery: ["/img/products/n5.jpg", "/img/products/n6.jpg", "/img/products/n4.jpg", "/img/products/n8.jpg"],
     brand: "Nexa",
@@ -159,6 +173,7 @@ export const products = [
   },
   {
     id: "n6",
+    slug: "mochila-executiva-impermeavel",
     img: "/img/products/n6.jpg",
     gallery: ["/img/products/n6.jpg", "/img/products/n7.jpg", "/img/products/n5.jpg", "/img/products/n1.jpg"],
     brand: "Urbanix",
@@ -171,6 +186,7 @@ export const products = [
   },
   {
     id: "n7",
+    slug: "short-moletom-confort",
     img: "/img/products/n7.jpg",
     gallery: ["/img/products/n7.jpg", "/img/products/n8.jpg", "/img/products/n6.jpg", "/img/products/n2.jpg"],
     brand: "Trek",
@@ -183,6 +199,7 @@ export const products = [
   },
   {
     id: "n8",
+    slug: "oculos-de-sol-retangular",
     img: "/img/products/n8.jpg",
     gallery: ["/img/products/n8.jpg", "/img/products/n1.jpg", "/img/products/n7.jpg", "/img/products/n3.jpg"],
     brand: "Nexa",
@@ -197,4 +214,8 @@ export const products = [
 
 export function getProductById(id) {
   return products.find((p) => p.id === id);
+}
+
+export function getProductBySlug(slug) {
+  return products.find((p) => p.slug === slug);
 }

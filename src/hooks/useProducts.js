@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { api } from "../services/api.js";
+import { products as staticProducts, getProductBySlug as getStaticProductBySlug } from "../data/products.js";
 
 // O catálogo é pequeno (16 produtos), então busca tudo de uma vez com
 // pageSize alto e deixa filtro/paginação continuarem client-side, como já era.
+//
+// Quando a API não responde (ex: site publicado no GitHub Pages, sem backend
+// hospedado), cai para o catálogo estático em src/data/products.js — mesmo
+// shape retornado pela API — pra o catálogo aparecer pra qualquer visitante.
 export function useProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -16,8 +20,8 @@ export function useProducts() {
       .then((data) => {
         if (active) setProducts(data.items);
       })
-      .catch((err) => {
-        if (active) setError(err.message);
+      .catch(() => {
+        if (active) setProducts(staticProducts);
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -27,7 +31,7 @@ export function useProducts() {
     };
   }, []);
 
-  return { products, loading, error };
+  return { products, loading };
 }
 
 export function useProduct(slug) {
@@ -49,8 +53,11 @@ export function useProduct(slug) {
       .then((data) => {
         if (active) setProduct(data);
       })
-      .catch((err) => {
-        if (active) setError(err.message);
+      .catch(() => {
+        const fallback = getStaticProductBySlug(slug);
+        if (!active) return;
+        if (fallback) setProduct(fallback);
+        else setError("Produto não encontrado.");
       })
       .finally(() => {
         if (active) setLoading(false);

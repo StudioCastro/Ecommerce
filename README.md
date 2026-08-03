@@ -23,15 +23,23 @@ Pago e um painel administrativo.
   "Adiciona backend completo, autenticação e endurece a segurança da
   aplicação") para o detalhe de cada item.
 
+### Catálogo funciona no GitHub Pages sem backend
+
+`src/hooks/useProducts.js` tenta a API primeiro e, se ela não responder (caso
+do GitHub Pages, onde não há backend público), cai automaticamente para o
+catálogo estático em `src/data/products.js` — os mesmos 16 produtos que
+alimentam o `seed` do banco. Assim qualquer visitante vê produtos, navega por
+categoria, entra no detalhe e monta carrinho (que já era 100% client-side via
+`localStorage`) sem precisar de backend nenhum no ar.
+
 ### Pendência em aberto: onde hospedar o backend
 
-O site no GitHub Pages hoje só mostra a interface — login, produtos, carrinho
-e pedidos não funcionam para quem não é você, porque o front aponta pro
-backend em `localhost:3333`, que só existe na sua máquina. Para o site ficar
-funcional para qualquer visitante, falta hospedar `server/` (+ Postgres +
-Redis) em algum lugar público e apontar `VITE_API_URL` (no build do GitHub
-Actions, via Settings > Secrets and variables > Actions > Variables) para essa
-URL.
+Login, checkout, histórico de pedidos e painel admin continuam dependendo do
+backend em `localhost:3333`, que só existe na sua máquina — esses recursos não
+funcionam para quem não é você. Para o site ficar 100% funcional pra qualquer
+visitante, falta hospedar `server/` (+ Postgres + Redis) em algum lugar
+público e apontar `VITE_API_URL` (no build do GitHub Actions, via Settings >
+Secrets and variables > Actions > Variables) para essa URL.
 
 Opções discutidas:
 
