@@ -143,9 +143,6 @@ Durante a análise do zip enviado, encontrei os seguintes problemas — todos co
 
 ## Pontos que seguem como estão (avisos, não bugs)
 
-- O vídeo `about/1.mp4` tem ~8MB — considere comprimir ou trocar por um vídeo hospedado
-  externamente (YouTube/Vimeo embed) antes de colocar em produção, para não pesar o
-  carregamento da página Sobre.
 - O mapa do Google Maps embutido na página Contact usa coordenadas genéricas de exemplo —
   troque pelo endereço real da loja.
 - O e-mail, telefone e endereço no rodapé/contato são fictícios — troque pelos reais.
